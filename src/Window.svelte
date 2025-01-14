@@ -1,5 +1,5 @@
 <script>
-  const { title = "Title" } = $props();
+  const { title = "Title", id = " " } = $props();
 </script>
 
 <main
@@ -7,6 +7,7 @@
     relative
     sm:w-11/12 sm:h-11/12 sm:border-4 sm:border-black sm:my-4 sm:mx-auto sm:rounded-md sm:p-4
 "
+  {id}
 >
   <span
     class="
