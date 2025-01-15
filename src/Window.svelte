@@ -1,5 +1,5 @@
 <script>
-  const { title = "Title", id = " " } = $props();
+  const { title = "Title", id = " ", children } = $props();
 </script>
 
 <main
@@ -16,5 +16,5 @@
   >
     {title}
   </span>
-  <slot />
+  {@render children?.()}
 </main>
