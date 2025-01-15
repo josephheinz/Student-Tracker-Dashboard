@@ -25,6 +25,7 @@
 	"dependencies": {
 		"@fortawesome/free-solid-svg-icons": "^6.7.2",
 		"@fortawesome/svelte-fontawesome": "^0.2.3",
+		"@microsoft/signalr": "^8.0.7",
 		"@sveltejs/adapter-node": "^5.2.11"
 	}
 }
