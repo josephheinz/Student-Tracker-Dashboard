@@ -7,6 +7,7 @@
   import Window from "../../../Window.svelte";
   import Navbar from "../../../Navbar.svelte";
   import Container from "../../../Container.svelte";
+  import StudentContainer from "../../../StudentContainer.svelte";
 
   getAllStudents();
 
@@ -18,7 +19,9 @@
   });
 </script>
 
-<title></title>
+<title
+  >{student?.firstName} {student?.lastName} | Student Tracker Dashboard</title
+>
 
 <Window title={"Student Info Page"}>
   <Navbar {navLinks} />
@@ -48,5 +51,7 @@
         In
       </h1>
     {/if}
+    <span>Age: {student?.age}</span><br />
+    <span>Grade: {student?.grade}th</span>
   </Container>
 </Window>
