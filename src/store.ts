@@ -1,5 +1,6 @@
 import { pushState } from "$app/navigation";
 import { writable } from "svelte/store";
+import * as signalR from "@microsoft/signalr";
 export let navLinks = writable([
   { href: "/", text: "Home" },
   { href: "/Students", text: "Students" },
@@ -31,7 +32,7 @@ export class Student {
     this.lastName = lastName;
     this.age = age;
     this.grade = grade;
-    
+
     this.id = id;
     this.nfcId = nfcId;
     this.currentPunchout = currentPunchout;
@@ -75,3 +76,30 @@ export const getAllStudents = async (): Promise<Student[]> => {
     });
   return [];
 };
+
+export const connection = new signalR.HubConnectionBuilder()
+  .configureLogging(signalR.LogLevel.Debug)
+  .withUrl("https://student-tracker-api.azurewebsites.net/punchoutHub", {
+    accessTokenFactory: () => {
+      return "NFJejnqGdi";
+    },
+    transport: signalR.HttpTransportType.WebSockets,
+  })
+  .build();
+
+connection
+  .start()
+  .then(function () {
+    //console.log("Connection successful");
+  })
+  .catch(function (err) {
+    return console.error(err.toString());
+  });
+
+connection.on("PunchoutCreated", function (punchout, student) {
+  getAllStudents();
+});
+
+connection.on("PunchoutClosed", function (info) {
+  getAllStudents();
+});
