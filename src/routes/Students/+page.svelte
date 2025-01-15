@@ -8,7 +8,7 @@
 
 <title>Students | Student Tracker Dashboard</title>
 
-<Window title={"Student Tracker Dashboard"} id={"tracker-main"}>
+<Window title={"Students | Student Tracker Dashboard"} id={"tracker-main"}>
   <Navbar {navLinks} />
   <StudentsContainer>
     {#each $students as student}

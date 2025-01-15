@@ -6,11 +6,12 @@
   const { student } = $props();
 </script>
 
-<div
+<a
   class="
         sm:border-4 sm:border-black sm:rounded-md sm:p-4 sm:m-1 sm:w-full sm:inline-block sm:flex sm:justify-stretch sm:items-center sm:gap-2
     "
   style="background:{student.currentPunchout === null ? '#a5fc8a' : '#fc8a8a'};"
+  href="/Student/{student.id}"
 >
   <FontAwesomeIcon
     icon={faLocationDot}
@@ -26,4 +27,4 @@
     <span class="font-bold">{student.firstName} {student.lastName}</span>
     <span>ID: {student.id}</span>
   </div>
-</div>
+</a>
