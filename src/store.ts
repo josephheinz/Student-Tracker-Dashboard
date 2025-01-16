@@ -69,6 +69,47 @@ export class Student {
   }
 }
 
+export const getPunchoutsByStudentId = async (
+  id: number
+): Promise<Punchout[]> => {
+  fetch(
+    `https://student-tracker-api.azurewebsites.net/api/punchout/getPunchoutsByStudentId/${id}`,
+    {
+      method: "GET",
+      headers: { ApiKey: "NFJejnqGdi" },
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // creates empty array to be filled by punchouts
+      let _p: Punchout[] = [];
+      data.forEach((elem: Punchout) => {
+        _p.push(
+          new Punchout(
+            elem.id,
+            elem.reason,
+            elem.nfcId,
+            id,
+            elem.duration,
+            elem.timeback,
+            elem.timeout
+          )
+        );
+      });
+      //console.log(_p)
+      return _p;
+    })
+    .catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+    });
+  return [];
+};
+
 export const getAllPunchouts = async (): Promise<Punchout[]> => {
   fetch("https://student-tracker-api.azurewebsites.net/api/punchout/getall", {
     method: "GET",
@@ -82,7 +123,7 @@ export const getAllPunchouts = async (): Promise<Punchout[]> => {
     })
     .then((data) => {
       // creates a temporary array which will overwrite the global punchouts array
-      let _p: Array<Punchout> = [];
+      let _p: Punchout[] = [];
       data.forEach((elem: Punchout) => {
         _p.push(
           new Punchout(
@@ -118,7 +159,6 @@ export const getAllStudents = async (): Promise<Student[]> => {
     })
     .then((data) => {
       // creates a temporary array which will overwrite the global students array
-      console.log(data);
       let _s: Array<Student> = [];
       data.forEach((elem: Student) => {
         if (!elem.isActive) return;
