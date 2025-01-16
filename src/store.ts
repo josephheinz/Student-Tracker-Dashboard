@@ -7,6 +7,36 @@ export let navLinks = writable([
 ]);
 // globally subscribable and writable
 export let students = writable<Student[]>([]);
+export let punchouts = writable<Punchout[]>([]);
+
+export class Punchout {
+  id: number = 0;
+  reason: string = "Bathroom";
+
+  nfcId: string | null = null;
+  studentId: number = 0;
+  duration: number = 310;
+  timeback: string = "";
+  timeout: string = "";
+
+  constructor(
+    id: number,
+    reason: string,
+    nfcId: string | null,
+    studentId: number,
+    duration: number,
+    timeback: string,
+    timeout: string
+  ) {
+    this.id = id;
+    this.reason = reason;
+    this.nfcId = nfcId;
+    this.studentId = studentId;
+    this.duration = duration;
+    this.timeback = timeback;
+    this.timeout = timeout;
+  }
+}
 
 export class Student {
   age: number = 0;
@@ -38,6 +68,42 @@ export class Student {
     this.currentPunchout = currentPunchout;
   }
 }
+
+export const getAllPunchouts = async (): Promise<Punchout[]> => {
+  fetch("https://student-tracker-api.azurewebsites.net/api/punchout/getall", {
+    method: "GET",
+    headers: { ApiKey: "NFJejnqGdi" },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // creates a temporary array which will overwrite the global punchouts array
+      let _p: Array<Punchout> = [];
+      data.forEach((elem: Punchout) => {
+        _p.push(
+          new Punchout(
+            elem.id,
+            elem.reason,
+            elem.nfcId,
+            elem.studentId,
+            elem.duration,
+            elem.timeback,
+            elem.timeout
+          )
+        );
+
+        punchouts.set(_p);
+      });
+    })
+    .catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+    });
+  return [];
+};
 
 export const getAllStudents = async (): Promise<Student[]> => {
   fetch("https://student-tracker-api.azurewebsites.net/api/student/getall", {
@@ -98,8 +164,10 @@ connection
 
 connection.on("PunchoutCreated", function (punchout, student) {
   getAllStudents();
+  getAllPunchouts();
 });
 
 connection.on("PunchoutClosed", function (info) {
   getAllStudents();
+  getAllPunchouts();
 });

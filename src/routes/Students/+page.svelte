@@ -3,7 +3,15 @@
   import StudentsContainer from "../../StudentsContainer.svelte";
   import StudentContainer from "../../StudentContainer.svelte";
   import Navbar from "../../Navbar.svelte";
-  import { navLinks, students, Student } from "../../store";
+  import {
+    navLinks,
+    students,
+    getAllStudents,
+    getAllPunchouts,
+  } from "../../store";
+
+  getAllStudents();
+  getAllPunchouts();
 </script>
 
 <title>Students | Student Tracker Dashboard</title>
