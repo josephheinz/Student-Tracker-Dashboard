@@ -72,6 +72,7 @@ export class Student {
 export const getPunchoutsByStudentId = async (
   id: number
 ): Promise<Punchout[]> => {
+  let _p: Punchout[] = [];
   fetch(
     `https://student-tracker-api.azurewebsites.net/api/punchout/getPunchoutsByStudentId/${id}`,
     {
@@ -87,7 +88,7 @@ export const getPunchoutsByStudentId = async (
     })
     .then((data) => {
       // creates empty array to be filled by punchouts
-      let _p: Punchout[] = [];
+
       data.forEach((elem: Punchout) => {
         _p.push(
           new Punchout(
@@ -107,7 +108,7 @@ export const getPunchoutsByStudentId = async (
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
-  return [];
+  return _p;
 };
 
 export const getAllPunchouts = async (): Promise<Punchout[]> => {

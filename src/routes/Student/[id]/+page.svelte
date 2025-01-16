@@ -19,17 +19,7 @@
   $: ID = Number($page.params.id);
 
   let student: Student | undefined;
-  let studentPunchouts = writable<Punchout[]>([
-    new Punchout(
-      4948,
-      "Bathroom",
-      null,
-      103,
-      121,
-      "2025-01-16T14:10:12.7",
-      "2025-01-16T14:12:14.67"
-    ),
-  ]);
+  let studentPunchouts = writable<Punchout[]>([]);
   let loading: boolean = true;
 
   onMount(async () => {
@@ -40,6 +30,7 @@
 
       if (student) {
         const punchouts = await getPunchoutsByStudentId(ID);
+        console.log(punchouts);
         studentPunchouts.set(punchouts);
       }
     }
@@ -85,6 +76,7 @@ sm:font-bold sm:text-lg sm:text-green-500
       <span>Age: {student?.age}</span><br />
       <span>Grade: {student?.grade}th</span><br />
       <span>Punchouts:</span><br />
+      {$studentPunchouts}
       <ul>
         {#each $studentPunchouts as punchout}
           <li>{punchout.id}</li>
