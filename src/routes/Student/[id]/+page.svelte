@@ -3,7 +3,6 @@
   import { writable, get } from "svelte/store";
   import {
     students,
-    navLinks,
     Student,
     getAllStudents,
     getPunchoutsByStudentId,
@@ -13,6 +12,7 @@
   import Window from "../../../Window.svelte";
   import Navbar from "../../../Navbar.svelte";
   import Container from "../../../Container.svelte";
+  import PunchoutContainer from "../../../PunchoutContainer.svelte";
   import StudentContainer from "../../../StudentContainer.svelte";
   import { onMount } from "svelte";
 
@@ -52,7 +52,7 @@
   <p>Loading...</p>
 {:else}
   <Window title={"Student Info Page"}>
-    <Navbar {navLinks} />
+    <Navbar />
     <Container>
       <h1
         class="
@@ -82,11 +82,11 @@ sm:font-bold sm:text-lg sm:text-green-500
       <span>Age: {$student?.age}</span><br />
       <span>Grade: {$student?.grade}th</span><br />
       <span>Punchouts:</span><br />
-      <ul>
+      <div class="sm:grid sm:grid-cols-8 sm:gap-2">
         {#each $studentPunchouts as punchout}
-          <li>{punchout.id}</li>
+          <PunchoutContainer {punchout} />
         {/each}
-      </ul>
+      </div>
     </Container>
   </Window>
 {/if}

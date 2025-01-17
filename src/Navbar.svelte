@@ -1,5 +1,5 @@
 <script>
-  const { navLinks } = $props();
+  import { navLinks } from "./store";
 </script>
 
 <nav

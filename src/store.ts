@@ -68,6 +68,37 @@ export class Student {
     this.currentPunchout = currentPunchout;
   }
 }
+export const getPunchoutById = async (id: number): Promise<Punchout | null> => {
+  await fetch(
+    `https://student-tracker-api.azurewebsites.net/api/punchout/id/${id}`,
+    {
+      method: "GET",
+      headers: { ApiKey: "NFJejnqGdi" },
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      let _p = new Punchout(
+        id,
+        data.reason,
+        data.nfcId,
+        data.studentId,
+        data.duration,
+        data.timeback,
+        data.timeout
+      );
+      return _p;
+    })
+    .catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+    });
+  return null;
+};
 
 export const getPunchoutsByStudentId = async (
   id: number
