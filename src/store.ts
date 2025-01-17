@@ -73,7 +73,7 @@ export const getPunchoutsByStudentId = async (
   id: number
 ): Promise<Punchout[]> => {
   let _p: Punchout[] = [];
-  fetch(
+  await fetch(
     `https://student-tracker-api.azurewebsites.net/api/punchout/getPunchoutsByStudentId/${id}`,
     {
       method: "GET",
@@ -112,10 +112,13 @@ export const getPunchoutsByStudentId = async (
 };
 
 export const getAllPunchouts = async (): Promise<Punchout[]> => {
-  fetch("https://student-tracker-api.azurewebsites.net/api/punchout/getall", {
-    method: "GET",
-    headers: { ApiKey: "NFJejnqGdi" },
-  })
+  await fetch(
+    "https://student-tracker-api.azurewebsites.net/api/punchout/getall",
+    {
+      method: "GET",
+      headers: { ApiKey: "NFJejnqGdi" },
+    }
+  )
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok " + response.statusText);
@@ -148,10 +151,14 @@ export const getAllPunchouts = async (): Promise<Punchout[]> => {
 };
 
 export const getAllStudents = async (): Promise<Student[]> => {
-  fetch("https://student-tracker-api.azurewebsites.net/api/student/getall", {
-    method: "GET",
-    headers: { ApiKey: "NFJejnqGdi" },
-  })
+  let _s: Array<Student> = [];
+  await fetch(
+    "https://student-tracker-api.azurewebsites.net/api/student/getall",
+    {
+      method: "GET",
+      headers: { ApiKey: "NFJejnqGdi" },
+    }
+  )
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok " + response.statusText);
@@ -160,7 +167,7 @@ export const getAllStudents = async (): Promise<Student[]> => {
     })
     .then((data) => {
       // creates a temporary array which will overwrite the global students array
-      let _s: Array<Student> = [];
+
       data.forEach((elem: Student) => {
         if (!elem.isActive) return;
         _s.push(
@@ -175,13 +182,12 @@ export const getAllStudents = async (): Promise<Student[]> => {
           )
         );
       });
-
-      students.set(_s);
+      return _s;
     })
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
-  return [];
+  return _s;
 };
 
 export const connection = new signalR.HubConnectionBuilder()

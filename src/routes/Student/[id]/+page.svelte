@@ -18,19 +18,34 @@
 
   $: ID = Number($page.params.id);
 
-  let student: Student | undefined;
+  let student = writable<Student | undefined>(undefined);
   let studentPunchouts = writable<Punchout[]>([]);
   let loading: boolean = true;
 
   onMount(async () => {
-    await getAllStudents();
-    if (ID !== undefined) {
-      const $students = get(students);
-      student = $students.find((s) => s.id === ID);
+    console.log("onMount: Fetching students...");
 
-      if (student) {
+    // Fetch and set the students store
+    const fetchedStudents = await getAllStudents();
+    console.log("Fetched students in onMount:", fetchedStudents);
+    students.set(fetchedStudents);
+
+    // Access the updated store value
+    const $students = get(students);
+    console.log("Students store value after set:", $students);
+
+    if (ID !== undefined) {
+      console.log("ID is defined:", ID);
+
+      // Find the student by ID
+      const foundStudent = $students.find((s) => s.id === ID);
+      console.log("Found student:", foundStudent);
+      student.set(foundStudent);
+
+      // Fetch punchouts if the student exists
+      if (foundStudent) {
         const punchouts = await getPunchoutsByStudentId(ID);
-        console.log(punchouts);
+        console.log("Punchouts fetched:", punchouts);
         studentPunchouts.set(punchouts);
       }
     }
@@ -39,7 +54,7 @@
 </script>
 
 <title
-  >{student?.firstName} {student?.lastName} | Student Tracker Dashboard</title
+  >{$student?.firstName} {$student?.lastName} | Student Tracker Dashboard</title
 >
 
 {#if loading}
@@ -53,10 +68,10 @@
     sm:font-black sm:text-3xl
     "
       >
-        {student?.firstName}
-        {student?.lastName}
+        {$student?.firstName}
+        {$student?.lastName}
       </h1>
-      {#if student?.currentPunchout !== null}
+      {#if $student?.currentPunchout !== null}
         <h1
           class="
   sm:font-bold sm:text-lg sm:text-red-500
@@ -73,10 +88,9 @@ sm:font-bold sm:text-lg sm:text-green-500
           In
         </h1>
       {/if}
-      <span>Age: {student?.age}</span><br />
-      <span>Grade: {student?.grade}th</span><br />
+      <span>Age: {$student?.age}</span><br />
+      <span>Grade: {$student?.grade}th</span><br />
       <span>Punchouts:</span><br />
-      {$studentPunchouts}
       <ul>
         {#each $studentPunchouts as punchout}
           <li>{punchout.id}</li>
