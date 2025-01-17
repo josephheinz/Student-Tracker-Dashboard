@@ -23,29 +23,20 @@
   let loading: boolean = true;
 
   onMount(async () => {
-    console.log("onMount: Fetching students...");
-
     // Fetch and set the students store
     const fetchedStudents = await getAllStudents();
-    console.log("Fetched students in onMount:", fetchedStudents);
     students.set(fetchedStudents);
 
-    // Access the updated store value
     const $students = get(students);
-    console.log("Students store value after set:", $students);
 
     if (ID !== undefined) {
-      console.log("ID is defined:", ID);
-
       // Find the student by ID
       const foundStudent = $students.find((s) => s.id === ID);
-      console.log("Found student:", foundStudent);
       student.set(foundStudent);
 
       // Fetch punchouts if the student exists
       if (foundStudent) {
         const punchouts = await getPunchoutsByStudentId(ID);
-        console.log("Punchouts fetched:", punchouts);
         studentPunchouts.set(punchouts);
       }
     }
